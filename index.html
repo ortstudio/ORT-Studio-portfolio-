@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ORT Studios — Oatile Rakale, Frontend Developer &amp; Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --charcoal:    #17181B;
+    --charcoal2:   #1F2024;
+    --sky:    #4FA8E8;
+    --sky-lt: #7EC4F2;
+    --white:   #F4F5F7;
+    --grey:    #9BA1AC;
+    --border:  #2B2D33;
+    --card:    #1B1C20;
+  }
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--charcoal);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── ORT WATERMARK FIELD ── */
+  .watermark-field {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180' viewBox='0 0 180 180'%3E%3Ctext x='10' y='55' font-family='DM Mono, monospace' font-size='30' font-weight='600' fill='%234FA8E8' transform='rotate(-18 90 90)'%3EORT%3C/text%3E%3C/svg%3E");
+    background-repeat: repeat;
+    animation: watermarkDrift 80s linear infinite;
+    will-change: background-position, transform;
+  }
+  @keyframes watermarkDrift {
+    from { background-position: 0 0; }
+    to   { background-position: 360px 180px; }
+  }
+
+  /* ── REVEAL ON SCROLL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .watermark-field { animation: none; }
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: rgba(23, 24, 27, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--sky); }
+  .nav-links {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--grey);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--sky); }
+  .nav-cta {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    background: var(--sky);
+    padding: 10px 24px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--sky-lt); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,168,232,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--sky);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 1px;
+    background: var(--sky);
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 5vw, 72px);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    letter-spacing: -0.5px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--sky);
+  }
+  .hero-desc {
+    font-size: 17px;
+    color: var(--grey);
+    max-width: 460px;
+    margin-bottom: 40px;
+    line-height: 1.75;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .btn-primary {
+    background: var(--sky);
+    color: var(--charcoal);
+    padding: 14px 32px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--sky-lt); transform: translateY(-1px); }
+  .btn-ghost {
+    color: var(--white);
+    padding: 14px 28px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 14px;
+    border: 1px solid var(--border);
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--sky); color: var(--sky); }
+
+  /* Hero right — stat card */
+  .hero-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    position: relative;
+    transition: transform 0.2s ease-out;
+  }
+  .hero-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 40px; right: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--sky), transparent);
+  }
+  .stat-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 32px;
+    margin-bottom: 36px;
+  }
+  .stat-item {}
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--sky);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--grey);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--grey);
+    letter-spacing: 0.5px;
+  }
+  .tag.active { border-color: var(--sky); color: var(--sky-lt); }
+
+  /* ── SECTION COMMONS ── */
+  section {
+    padding: 100px 60px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .section-header {
+    margin-bottom: 60px;
+  }
+  .section-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--sky);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 3.5vw, 48px);
+    font-weight: 700;
+    line-height: 1.15;
+  }
+  .section-title em { font-style: italic; color: var(--sky); }
+  .section-sub {
+    font-size: 16px;
+    color: var(--grey);
+    max-width: 520px;
+    margin-top: 14px;
+    line-height: 1.7;
+  }
+  hr.divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 60px;
+  }
+
+  /* ── SERVICES (LIGHT SECTION — adds white into the palette) ── */
+  #services {
+    position: relative;
+    background: #FFFFFF;
+    color: var(--white);
+    --card: #FFFFFF;
+    --charcoal2: #F5F6F8;
+    --border: #E3E5E9;
+    --white: #17181B;
+    --grey: #5B5F68;
+  }
+  #services::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 50%;
+    width: 100vw;
+    transform: translateX(-50%);
+    background: #FFFFFF;
+    z-index: -1;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .service-card {
+    background: var(--card);
+    padding: 40px 32px;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .service-card:hover { background: var(--charcoal2); }
+  .service-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(79,168,232,0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    color: var(--sky);
+  }
+  .service-icon svg { width: 22px; height: 22px; }
+  .service-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .service-desc {
+    font-size: 14px;
+    color: var(--grey);
+    line-height: 1.75;
+  }
+  .service-list {
+    margin-top: 20px;
+    list-style: none;
+  }
+  .service-list li {
+    font-size: 13px;
+    color: var(--grey);
+    padding: 6px 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .service-list li::before {
+    content: '→';
+    color: var(--sky);
+    font-size: 12px;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .project-card:hover { border-color: var(--sky); transform: translateY(-3px); }
+  .status-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px 5px 8px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    backdrop-filter: blur(6px);
+  }
+  .status-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+  .status-live {
+    background: rgba(63, 185, 122, 0.18);
+    color: #6fdb9b;
+    border: 1px solid rgba(63, 185, 122, 0.4);
+  }
+  .status-live::before { background: #6fdb9b; box-shadow: 0 0 6px #6fdb9b; }
+  .status-prototype {
+    background: rgba(255, 255, 255, 0.1);
+    color: #d7d9dd;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .status-prototype::before { background: #d7d9dd; }
+  .project-thumb {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255,255,255,0.95);
+    position: relative;
+    overflow: hidden;
+  }
+  .project-thumb svg { width: 42px; height: 42px; }
+  .project-thumb img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    z-index: 1;
+  }
+  .project-thumb::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(23,24,27,0.9));
+  }
+  .p0 { background: linear-gradient(135deg, #5c2a3a, #2d1119); }
+  .p1 { background: linear-gradient(135deg, #1a3a5c, #0d2137); }
+  .p2 { background: linear-gradient(135deg, #1a1a2e, #2d1b4e); }
+  .p3 { background: linear-gradient(135deg, #0d3321, #1a5c35); }
+  .p4 { background: linear-gradient(135deg, #3a1a0d, #5c2d1a); }
+  .p5 { background: linear-gradient(135deg, #2a2a2a, #0d0d0d); }
+  .p6 { background: linear-gradient(135deg, #7a1f1f, #2b0d0d); }
+  .p7 { background: linear-gradient(135deg, #3d3527, #17140e); }
+  .p8 { background: linear-gradient(135deg, #1c2733, #080d12); }
+  .project-body { padding: 24px 28px 28px; }
+  .project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--sky);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .project-link:hover { color: var(--sky-lt); border-color: var(--sky-lt); }
+  .project-type {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--sky);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .project-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .project-desc {
+    font-size: 13px;
+    color: var(--grey);
+    line-height: 1.7;
+    margin-bottom: 20px;
+  }
+  .project-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .stack-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: rgba(79,168,232,0.08);
+    border: 1px solid rgba(79,168,232,0.2);
+    color: var(--sky-lt);
+  }
+
+  /* ── PROCESS ── */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+  }
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 28px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: var(--border);
+    z-index: 0;
+  }
+  .process-step {
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+    z-index: 1;
+  }
+  .step-circle {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--sky);
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .process-step:hover .step-circle {
+    border-color: var(--sky);
+    background: rgba(79,168,232,0.08);
+  }
+  .step-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+  .step-desc {
+    font-size: 13px;
+    color: var(--grey);
+    line-height: 1.65;
+  }
+
+  /* ── LIGHT BAND (adds real white into the balance, not just text) ── */
+  .section-light {
+    background: var(--white);
+    color: var(--charcoal);
+    max-width: none;
+    width: 100%;
+    padding: 100px 0;
+    margin: 0;
+  }
+  .section-light .section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 60px;
+  }
+  .section-light .section-title { color: var(--charcoal); }
+  .section-light .section-sub { color: #585c64; }
+  .section-light .step-title { color: var(--charcoal); }
+  .section-light .step-desc { color: #585c64; }
+  .section-light .step-circle { background: #f2f3f5; border-color: #dcdee1; }
+  .section-light .process-steps::before { background: #dcdee1; }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .about-photo {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    aspect-ratio: 3/4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-photo-inner {
+    color: var(--white);
+    opacity: 0.18;
+  }
+  .about-photo-inner svg { width: 100px; height: 100px; }
+  .about-photo-label {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--sky);
+    letter-spacing: 2px;
+  }
+  .about-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .about-role {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--sky);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+  }
+  .about-bio {
+    font-size: 15px;
+    color: var(--grey);
+    line-height: 1.8;
+    margin-bottom: 36px;
+  }
+  .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+
+  /* ── CONTACT ── */
+  .contact-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .contact-info p {
+    font-size: 15px;
+    color: var(--grey);
+    line-height: 1.8;
+    margin-bottom: 32px;
+  }
+  .contact-detail {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .contact-detail:last-child { border-bottom: 1px solid var(--border); }
+  .contact-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--sky); }
+  .contact-icon svg { width: 20px; height: 20px; }
+  .contact-label { font-size: 11px; color: var(--grey); letter-spacing: 1px; text-transform: uppercase; }
+  .contact-val { font-size: 14px; color: var(--white); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    padding: 40px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .footer-logo span { color: var(--sky); }
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--grey);
+    letter-spacing: 1px;
+  }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-size: 12px;
+    color: var(--grey);
+    text-decoration: none;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--sky); }
+
+  .project-card { cursor: pointer; }
+  .project-card:focus-visible { outline: 2px solid var(--sky); outline-offset: 2px; }
+
+  /* ── PROJECT MODAL ── */
+  .project-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .project-modal.is-open { display: flex; }
+  .project-modal-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,11,13,0.75);
+    backdrop-filter: blur(2px);
+  }
+  .project-modal-panel {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 480px;
+    width: 100%;
+    z-index: 1;
+  }
+  .project-modal-close {
+    position: absolute;
+    top: 14px; right: 16px;
+    background: none;
+    border: none;
+    color: var(--grey);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+  .project-modal-close:hover { color: var(--sky); }
+
+  .nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,11,13,0.5);
+    z-index: 99;
+  }
+  .nav-backdrop.is-open { display: block; }
+
+  /* ── HAMBURGER ── */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 110;
+  }
+  .hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--white);
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+  .hamburger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .hamburger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+  .hamburger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .hamburger { display: flex; }
+    .nav-links {
+      display: flex;
+      position: fixed;
+      top: 0;
+      right: 0;
+      height: 100vh;
+      width: min(78vw, 320px);
+      background: var(--charcoal2);
+      border-left: 1px solid var(--border);
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 100px 32px 40px;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 105;
+    }
+    .nav-links.is-open { transform: translateX(0); }
+    .nav-links a { padding: 14px 0; width: 100%; border-bottom: 1px solid var(--border); }
+    .hero, section { padding: 80px 24px; }
+    .hero-grid, .about-grid { grid-template-columns: minmax(0, 1fr); }
+    .services-grid { grid-template-columns: minmax(0, 1fr); }
+    .projects-grid { grid-template-columns: minmax(0, 1fr); }
+    .process-steps { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px; }
+    .process-steps::before { display: none; }
+    .section-light { padding: 80px 0; }
+    .section-inner { padding: 0 24px; }
+    footer { flex-direction: column; gap: 16px; text-align: center; padding: 32px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="watermark-field" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">ORT<span>.</span>Studios</a>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="brief-portfolio.html" target="_blank" rel="noopener">Profile</a></li>
+  </ul>
+  <a href="https://wa.me/27664135496?text=Hi%20Oatile%2C%20I%27d%20like%20to%20talk%20about%20a%20project." class="nav-cta" target="_blank" rel="noopener">Hire Me</a>
+  <button class="hamburger" id="hamburger-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="nav-links">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="nav-backdrop" id="nav-backdrop"></div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid">
+    <div>
+      <div class="hero-eyebrow">Frontend Developer &amp; Designer</div>
+      <h1>Crafting <em>Interfaces</em><br>That Look Sharp<br>and Feel Effortless.</h1>
+      <p class="hero-desc">
+        I'm Oatile Rakale — founder of ORT Studios. I design and build the frontend — fast, responsive, pixel-perfect interfaces that feel as good as they look.
+      </p>
+      <div class="hero-actions">
+        <a href="#work" class="btn-primary">View My Work</a>
+        <a href="https://wa.me/27664135496?text=Hi%20Oatile%2C%20I%27d%20like%20to%20talk%20about%20a%20project." class="btn-ghost" target="_blank" rel="noopener">Get in Touch</a>
+      </div>
+    </div>
+    <div>
+      <div class="hero-card">
+        <div class="stat-grid">
+          <div class="stat-item">
+            <div class="stat-num">Direct</div>
+            <div class="stat-label">No Account Managers</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">Fast</div>
+            <div class="stat-label">Delivery Turnaround</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">Pixel</div>
+            <div class="stat-label">Perfect Detail</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">Ongoing</div>
+            <div class="stat-label">Post-Launch Support</div>
+          </div>
+        </div>
+        <div class="tech-tags">
+          <span class="tag active">HTML</span>
+          <span class="tag active">CSS</span>
+          <span class="tag active">JavaScript</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-header">
+    <div class="section-eyebrow">What I Do</div>
+    <h2 class="section-title">Frontend &amp; Design,<br><em>Start to Finish.</em></h2>
+    <p class="section-sub">From concept to launch, I handle everything — so you can focus on running your business.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 0 18c1 0 1.6-.7 1.6-1.5 0-.4-.15-.75-.4-1.05-.25-.3-.4-.65-.4-1.05 0-.8.65-1.4 1.4-1.4H16a4 4 0 0 0 4-4A9 9 0 0 0 12 3z"/><circle cx="7.5" cy="11" r="1.1"/><circle cx="10.5" cy="7.5" r="1.1"/><circle cx="15" cy="8" r="1.1"/></svg></div>
+      <div class="service-title">Web Design</div>
+      <div class="service-desc">Beautiful, on-brand designs that make a strong first impression and keep visitors engaged.</div>
+      <ul class="service-list">
+        <li>UI / UX Design</li>
+        <li>Brand-aligned Layouts</li>
+        <li>Mobile-first Approach</li>
+        <li>Figma Prototyping</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="8 6 2 12 8 18"/><polyline points="16 6 22 12 16 18"/><line x1="13" y1="4" x2="11" y2="20"/></svg></div>
+      <div class="service-title">Frontend Development</div>
+      <div class="service-desc">Clean, fast, and scalable code built with modern technologies that stand the test of time.</div>
+      <ul class="service-list">
+        <li>HTML, CSS &amp; JavaScript Builds</li>
+        <li>Interactive Animations</li>
+        <li>Responsive &amp; Accessible</li>
+        <li>Performance Optimisation</li>
+      </ul>
+    </div>
+    <div class="service-card">
+      <div class="service-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c2.2 2 3.5 5 3.5 8.5 0 2-.5 3.8-1.3 5.3h-4.4C8.9 14.3 8.4 12.5 8.4 10.5 8.4 7 9.8 4 12 2z"/><circle cx="12" cy="9.5" r="1.4"/><path d="M8.4 13l-3 1.5L7 17"/><path d="M15.6 13l3 1.5L17 17"/><path d="M9.8 18.8 12 22l2.2-3.2"/></svg></div>
+      <div class="service-title">Launch & Support</div>
+      <div class="service-desc">I don't just hand you a website — I make sure it's live, secure, and running smoothly long-term.</div>
+      <ul class="service-list">
+        <li>Hosting & Deployment</li>
+        <li>Domain Setup</li>
+        <li>Ongoing Maintenance</li>
+        <li>Analytics Integration</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- WORK -->
+<section id="work">
+  <div class="section-header">
+    <div class="section-eyebrow">Portfolio</div>
+    <h2 class="section-title">Recent <em>Projects.</em></h2>
+    <p class="section-sub">A selection of concept builds and sample layouts that show my design and frontend process — not commissioned client work.</p>
+  </div>
+  <div class="projects-grid">
+    <div class="project-card" role="button" tabindex="0" data-type="Bakery Website" data-name="Velvet Oven Bakery" data-desc="A warm, elegant site for an artisan bakery, with a story-driven brand introduction, a showcase of custom cakes and pastries, and customer testimonials that build trust before a first order." data-stack="HTML,CSS,JavaScript" data-status="Prototype">
+      <span class="status-badge status-prototype">Prototype</span>
+      <div class="project-thumb p0"><img src="velvet-oven-thumb.jpg" alt="Velvet Oven Bakery preview" loading="lazy"></div>
+      <div class="project-body">
+        <div class="project-type">Bakery Website</div>
+        <div class="project-name">Velvet Oven Bakery</div>
+        <div class="project-desc">A warm, elegant site for an artisan bakery, with a story-driven brand introduction, a showcase of custom cakes and pastries, and customer testimonials that build trust before a first order.</div>
+        <div class="project-stack">
+          <span class="stack-pill">HTML</span>
+          <span class="stack-pill">CSS</span>
+          <span class="stack-pill">JavaScript</span>
+        </div>
+        <a class="project-link" href="velvet-oven.html" target="_blank" rel="noopener" onclick="event.stopPropagation()">View Prototype &rarr;</a>
+      </div>
+    </div>
+    <div class="project-card" role="button" tabindex="0" data-type="Fitness &amp; Gym" data-name="Iron Republic Gym" data-desc="A bold, high-energy site for a premium gym, with a class schedule, a facility gallery, and a straightforward membership sign-up flow." data-stack="HTML,CSS,JavaScript" data-status="Prototype">
+      <span class="status-badge status-prototype">Prototype</span>
+      <div class="project-thumb p5"><img src="iron-republic-gym-thumb.jpg" alt="Iron Republic Gym preview" loading="lazy"></div>
+      <div class="project-body">
+        <div class="project-type">Fitness &amp; Gym</div>
+        <div class="project-name">Iron Republic Gym</div>
+        <div class="project-desc">A bold, high-energy site for a premium gym, with a class schedule, a facility gallery, and a straightforward membership sign-up flow.</div>
+        <div class="project-stack">
+          <span class="stack-pill">HTML</span>
+          <span class="stack-pill">CSS</span>
+          <span class="stack-pill">JavaScript</span>
+        </div>
+        <a class="project-link" href="iron-republic-gym.html" target="_blank" rel="noopener" onclick="event.stopPropagation()">View Prototype &rarr;</a>
+      </div>
+    </div>
+    <div class="project-card" role="button" tabindex="0" data-type="Restaurant &amp; Pizzeria" data-name="Fuoco Pizzeria" data-desc="A high-energy site for a wood-fired Neapolitan pizzeria, with an appetite-driving hero, a full menu showcase, and a straightforward path to order or book a table." data-stack="HTML,CSS,JavaScript" data-status="Prototype">
+      <span class="status-badge status-prototype">Prototype</span>
+      <div class="project-thumb p6"><img src="fuoco-pizzeria-thumb.jpg" alt="Fuoco Pizzeria preview" loading="lazy"></div>
+      <div class="project-body">
+        <div class="project-type">Restaurant &amp; Pizzeria</div>
+        <div class="project-name">Fuoco Pizzeria</div>
+        <div class="project-desc">A high-energy site for a wood-fired Neapolitan pizzeria, with an appetite-driving hero, a full menu showcase, and a straightforward path to order or book a table.</div>
+        <div class="project-stack">
+          <span class="stack-pill">HTML</span>
+          <span class="stack-pill">CSS</span>
+          <span class="stack-pill">JavaScript</span>
+        </div>
+        <a class="project-link" href="fuoco-pizzeria.html" target="_blank" rel="noopener" onclick="event.stopPropagation()">View Prototype &rarr;</a>
+      </div>
+    </div>
+    <div class="project-card" role="button" tabindex="0" data-type="Barbershop &amp; Grooming" data-name="Blade &amp; Baron" data-desc="A sharp, masculine site for a premium barbershop, with a services and pricing menu, a gallery of the shop and cuts, and a clean booking call-to-action." data-stack="HTML,CSS,JavaScript" data-status="Prototype">
+      <span class="status-badge status-prototype">Prototype</span>
+      <div class="project-thumb p7"><img src="blade-and-baron-thumb.jpg" alt="Blade &amp; Baron preview" loading="lazy"></div>
+      <div class="project-body">
+        <div class="project-type">Barbershop &amp; Grooming</div>
+        <div class="project-name">Blade &amp; Baron</div>
+        <div class="project-desc">A sharp, masculine site for a premium barbershop, with a services and pricing menu, a gallery of the shop and cuts, and a clean booking call-to-action.</div>
+        <div class="project-stack">
+          <span class="stack-pill">HTML</span>
+          <span class="stack-pill">CSS</span>
+          <span class="stack-pill">JavaScript</span>
+        </div>
+        <a class="project-link" href="blade-and-baron.html" target="_blank" rel="noopener" onclick="event.stopPropagation()">View Prototype &rarr;</a>
+      </div>
+    </div>
+    <div class="project-card" role="button" tabindex="0" data-type="Automotive Showcase" data-name="The Collection" data-desc="A blueprint-styled showcase for a private car collection, walking through six standout machines with detailed spec breakdowns and a cinematic, scroll-driven reveal." data-stack="HTML,CSS,JavaScript" data-status="Prototype">
+      <span class="status-badge status-prototype">Prototype</span>
+      <div class="project-thumb p8"><img src="dream-garage-thumb.jpg" alt="The Collection preview" loading="lazy"></div>
+      <div class="project-body">
+        <div class="project-type">Automotive Showcase</div>
+        <div class="project-name">The Collection</div>
+        <div class="project-desc">A blueprint-styled showcase for a private car collection, walking through six standout machines with detailed spec breakdowns and a cinematic, scroll-driven reveal.</div>
+        <div class="project-stack">
+          <span class="stack-pill">HTML</span>
+          <span class="stack-pill">CSS</span>
+          <span class="stack-pill">JavaScript</span>
+        </div>
+        <a class="project-link" href="dream-garage.html" target="_blank" rel="noopener" onclick="event.stopPropagation()">View Prototype &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECT DETAIL MODAL -->
+<div class="project-modal" id="project-modal" aria-hidden="true">
+  <div class="project-modal-backdrop" data-close-modal></div>
+  <div class="project-modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-project-name">
+    <button class="project-modal-close" type="button" data-close-modal aria-label="Close">&times;</button>
+    <span class="status-badge" id="modal-project-status" style="position:static;display:inline-flex;margin-bottom:14px;"></span>
+    <div class="project-type" id="modal-project-type"></div>
+    <div class="project-name" id="modal-project-name" style="font-size:26px;"></div>
+    <p class="project-desc" id="modal-project-desc" style="font-size:14px;"></p>
+    <div class="project-stack" id="modal-project-stack"></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- PROCESS -->
+<section class="section-light">
+  <div class="section-inner">
+  <div class="section-header">
+    <div class="section-eyebrow">How I Work</div>
+    <h2 class="section-title">A Process Built for <em>Clarity.</em></h2>
+    <p class="section-sub">No surprises, no delays. Here's exactly how we go from idea to a live website.</p>
+  </div>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-circle">1</div>
+      <div class="step-title">Discovery</div>
+      <div class="step-desc">We talk about your goals, audience, and what success looks like for your project.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">2</div>
+      <div class="step-title">Design</div>
+      <div class="step-desc">I create wireframes and visual mockups. You review, give feedback, and we refine until it's right.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">3</div>
+      <div class="step-title">Build</div>
+      <div class="step-desc">Full development with regular check-ins. You see progress, not just a final reveal.</div>
+    </div>
+    <div class="process-step">
+      <div class="step-circle">4</div>
+      <div class="step-title">Launch</div>
+      <div class="step-desc">We go live, I set up hosting, test everything, and hand over the keys — plus ongoing support.</div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div>
+      <div class="about-photo">
+        <div class="about-photo-inner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div>
+        <div class="about-photo-label">OATILE RAKALE · FOUNDER</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-eyebrow">About Me</div>
+      <div class="about-name">Oatile Rakale</div>
+      <div class="about-role">Founder · ORT Studios</div>
+      <p class="about-bio">
+        I'm a frontend developer and designer passionate about building interfaces that don't just look great — they feel effortless to use. I started ORT Studios to give clients a direct line to someone who genuinely cares about their project, from the first sketch to the final pixel.<br><br>
+        Whether you're a small business needing your first website, or a growing company ready to level up your digital presence — I design and build interfaces that are clean, fast, and built to last.
+      </p>
+      <div class="skills-grid">
+        <span class="tag active">HTML</span>
+        <span class="tag active">CSS</span>
+        <span class="tag active">JavaScript</span>
+        <span class="tag">Figma / Design Systems</span>
+        <span class="tag">Motion &amp; Animation</span>
+        <span class="tag">UI / UX Design</span>
+      </div>
+      <a href="https://wa.me/27664135496?text=Hi%20Oatile%2C%20I%27d%20like%20to%20talk%20about%20a%20project." class="btn-primary" target="_blank" rel="noopener">Let's Work Together</a>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-header">
+    <div class="section-eyebrow">Get In Touch</div>
+    <h2 class="section-title">Ready to Build<br><em>Something Great?</em></h2>
+    <p class="section-sub">Tell me about your project on WhatsApp or email and I'll get back to you within 24 hours.</p>
+  </div>
+  <div class="contact-wrap">
+    <div class="contact-info">
+      <p>Whether you have a detailed brief or just an idea — reach out. I'm always happy to have a conversation about what you're building.</p>
+      <div class="contact-detail">
+        <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></span>
+        <div>
+          <div class="contact-label">WhatsApp</div>
+          <div class="contact-val"><a href="https://wa.me/27664135496?text=Hi%20Oatile%2C%20I%27d%20like%20to%20talk%20about%20a%20project." target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">+27 66 413 5496</a></div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span>
+        <div>
+          <div class="contact-label">Call</div>
+          <div class="contact-val"><a href="tel:+27657372812" style="color:inherit;text-decoration:none;">+27 65 737 2812</a></div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 7 12 13 21 7"/></svg></span>
+        <div>
+          <div class="contact-label">Email</div>
+          <div class="contact-val"><a href="mailto:ort.studio01@gmail.com" style="color:inherit;text-decoration:none;">ort.studio01@gmail.com</a></div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-7.5 7-12.5A7 7 0 0 0 5 9.5C5 14.5 12 22 12 22z"/><circle cx="12" cy="9.5" r="2.3"/></svg></span>
+        <div>
+          <div class="contact-label">Location</div>
+          <div class="contact-val">South Africa · Available Remotely</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 16 14"/></svg></span>
+        <div>
+          <div class="contact-label">Response Time</div>
+          <div class="contact-val">Within 24 hours</div>
+        </div>
+      </div>
+      <div class="contact-detail">
+        <span class="contact-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="3" y1="13" x2="21" y2="13"/></svg></span>
+        <div>
+          <div class="contact-label">Availability</div>
+          <div class="contact-val">Open to New Projects</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ORT<span>.</span>Studios</div>
+  <div class="footer-copy">© 2026 ORT Studios · Oatile Rakale · All rights reserved.</div>
+  <div class="footer-links">
+    <a href="#services">Services</a>
+    <a href="#work">Work</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Hamburger / mobile nav menu
+  const hamburgerBtn = document.getElementById('hamburger-btn');
+  const navLinksEl = document.getElementById('nav-links');
+  const navBackdrop = document.getElementById('nav-backdrop');
+
+  function closeMenu() {
+    hamburgerBtn.setAttribute('aria-expanded', 'false');
+    navLinksEl.classList.remove('is-open');
+    navBackdrop.classList.remove('is-open');
+  }
+  function toggleMenu() {
+    const isOpen = navLinksEl.classList.toggle('is-open');
+    hamburgerBtn.setAttribute('aria-expanded', String(isOpen));
+    navBackdrop.classList.toggle('is-open', isOpen);
+  }
+  if (hamburgerBtn) {
+    hamburgerBtn.addEventListener('click', toggleMenu);
+    navBackdrop.addEventListener('click', closeMenu);
+    navLinksEl.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+    window.addEventListener('resize', () => { if (window.innerWidth > 900) closeMenu(); });
+  }
+
+  // Project card click → detail modal
+  const projectModal = document.getElementById('project-modal');
+  const modalType = document.getElementById('modal-project-type');
+  const modalName = document.getElementById('modal-project-name');
+  const modalDesc = document.getElementById('modal-project-desc');
+  const modalStack = document.getElementById('modal-project-stack');
+  const modalStatus = document.getElementById('modal-project-status');
+
+  function openProjectModal(card) {
+    modalType.textContent = card.dataset.type || '';
+    modalName.textContent = card.dataset.name || '';
+    modalDesc.textContent = card.dataset.desc || '';
+    modalStack.innerHTML = (card.dataset.stack || '')
+      .split(',')
+      .filter(Boolean)
+      .map((s) => '<span class="stack-pill">' + s.trim() + '</span>')
+      .join('');
+    const status = card.dataset.status || '';
+    modalStatus.textContent = status;
+    modalStatus.className = 'status-badge ' + (status === 'Live' ? 'status-live' : 'status-prototype');
+    modalStatus.style.display = status ? 'inline-flex' : 'none';
+    projectModal.classList.add('is-open');
+    projectModal.setAttribute('aria-hidden', 'false');
+  }
+  function closeProjectModal() {
+    projectModal.classList.remove('is-open');
+    projectModal.setAttribute('aria-hidden', 'true');
+  }
+  document.querySelectorAll('.project-card').forEach((card) => {
+    card.addEventListener('click', () => openProjectModal(card));
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProjectModal(card); }
+    });
+  });
+  if (projectModal) {
+    projectModal.querySelectorAll('[data-close-modal]').forEach((el) => el.addEventListener('click', closeProjectModal));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeProjectModal(); });
+  }
+
+  // Reveal sections and cards as they scroll into view
+  const revealEls = document.querySelectorAll(
+    '.section-header, .service-card, .project-card, .process-step, .hero-card, .about-photo, .about-grid > div:last-child, .contact-info'
+  );
+  revealEls.forEach((el, i) => {
+    el.classList.add('reveal');
+    el.style.transitionDelay = (i % 4) * 0.08 + 's';
+  });
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+    revealEls.forEach((el) => io.observe(el));
+  } else {
+    revealEls.forEach((el) => el.classList.add('in-view'));
+  }
+
+  // Ambient watermark parallax — drifts opposite scroll direction at a fraction of speed
+  const watermark = document.querySelector('.watermark-field');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (watermark && !reduceMotion) {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          watermark.style.transform = 'translateY(' + (window.scrollY * 0.04) + 'px)';
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+
+  // 3D tilt on the hero stat card and project cards
+  if (!reduceMotion && window.matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.project-card, .hero-card').forEach((card) => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width;
+        const py = (e.clientY - rect.top) / rect.height;
+        const rotateX = (py - 0.5) * -10;
+        const rotateY = (px - 0.5) * 10;
+        card.style.transform = 'perspective(800px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) translateY(-4px)';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+      });
+    });
+  }
+</script>
+
+</body>
+</html>

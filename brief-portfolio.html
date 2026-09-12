@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Oatile Rakale — ORT Studios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #0B0D0F;
+    --dark-gray: #2B2F36;
+    --light-gray: #D8DCE1;
+    --white: #F7F8FA;
+    --sky: #4FA8E0;
+    --sky-text: #1D6FA0;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    margin: 0;
+    background: var(--white);
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--dark-gray);
+    overflow-x: hidden;
+  }
+
+  /* ---------- Persistent brand mark ---------- */
+  .brandmark {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 30;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--white);
+    border: 1px solid rgba(247,248,250,0.35);
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: rgba(11,13,15,0.35);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+
+  /* ---------- Eyebrow (shared) ---------- */
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--sky-text);
+  }
+  .eyebrow.on-dark { color: var(--sky); }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 560px;
+    overflow: hidden;
+    perspective: 1000px;
+    background: linear-gradient(155deg, var(--black) 0%, var(--dark-gray) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .layer {
+    position: absolute;
+    inset: -20%;
+    will-change: transform;
+  }
+
+  #heroWatermarkOuter { transform: translateZ(-600px) scale(1.6); }
+  .watermark-rotate {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-14deg);
+  }
+  .watermark-drift {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    row-gap: 34px;
+    opacity: 0.07;
+    animation: drift 60s linear infinite;
+    will-change: transform;
+  }
+  .watermark-drift.alt {
+    opacity: 0.05;
+    animation-duration: 80s;
+    animation-direction: reverse;
+  }
+  .watermark-drift span {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 27px;
+    color: var(--sky);
+    text-align: center;
+    white-space: nowrap;
+  }
+  @keyframes drift {
+    from { transform: translate(0, 0); }
+    to   { transform: translate(-80px, -80px); }
+  }
+
+  .layer-grid {
+    transform: translateZ(-300px) scale(1.3);
+    background-image:
+      linear-gradient(rgba(79,168,224,0.14) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,168,224,0.14) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(circle at 50% 45%, black 0%, transparent 68%);
+    -webkit-mask-image: radial-gradient(circle at 50% 45%, black 0%, transparent 68%);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 18px;
+    padding: 0 24px;
+    transition: opacity 0.1s linear;
+    will-change: transform, opacity;
+  }
+
+  .photo-frame {
+    width: clamp(112px, 18vw, 168px);
+    height: clamp(112px, 18vw, 168px);
+    border-radius: 26px;
+    border: 2px dashed rgba(79,168,224,0.55);
+    background: rgba(79,168,224,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 45px -18px rgba(0,0,0,0.6);
+  }
+  .owner-icon { width: 42%; height: 42%; stroke: var(--sky); }
+
+  .photo-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(247,248,250,0.65);
+  }
+
+  h1 {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: clamp(30px, 6vw, 56px);
+    line-height: 1.05;
+    margin: 0;
+    color: var(--white);
+    letter-spacing: -1px;
+  }
+
+  .scroll-cue {
+    position: absolute;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(247,248,250,0.65);
+    text-decoration: none;
+  }
+  .scroll-cue svg { animation: bob 1.8s ease-in-out infinite; }
+  .scroll-cue:focus-visible { outline: 2px solid var(--sky); outline-offset: 4px; border-radius: 4px; }
+  @keyframes bob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(6px); }
+  }
+
+  /* ---------- About ---------- */
+  .about {
+    position: relative;
+    background: var(--white);
+    padding: 96px 24px;
+    display: flex;
+    justify-content: center;
+  }
+  .about-inner {
+    max-width: 620px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .about h2 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(24px, 4vw, 32px);
+    color: var(--black);
+    margin: 0;
+    line-height: 1.25;
+  }
+  .about p {
+    font-size: 17px;
+    line-height: 1.75;
+    color: var(--dark-gray);
+    margin: 0;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+  }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: var(--sky-text);
+    border: 1px solid var(--sky-text);
+    padding: 7px 13px;
+    border-radius: 999px;
+  }
+
+  /* ---------- CTA ---------- */
+  .cta-section {
+    position: relative;
+    background: linear-gradient(155deg, var(--dark-gray) 0%, var(--black) 100%);
+    padding: 110px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .cta-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 16px;
+    max-width: 480px;
+  }
+  .cta-inner h2 {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--white);
+    font-size: clamp(22px, 4vw, 30px);
+    margin: 0;
+  }
+  .cta-inner p {
+    color: rgba(247,248,250,0.75);
+    font-size: 15px;
+    margin: 0;
+    line-height: 1.6;
+  }
+  .cta-button {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sky);
+    color: var(--black);
+    text-decoration: none;
+    padding: 15px 26px;
+    border-radius: 9px;
+    font-weight: 600;
+    font-size: 15px;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .cta-button:hover { background: var(--white); transform: translateY(-2px); }
+  .cta-button:focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; }
+  .cta-button svg { transition: transform 0.2s ease; }
+  .cta-button:hover svg { transform: translateX(3px); }
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 720px) {
+    .hero { min-height: 520px; }
+    .about { padding: 72px 20px; }
+    .cta-section { padding: 80px 20px; }
+    .brandmark { top: 14px; left: 14px; font-size: 11px; padding: 5px 8px; }
+  }
+
+  @media (max-width: 420px) {
+    .photo-frame { border-radius: 20px; }
+    h1 { letter-spacing: -0.5px; }
+    .about-inner, .cta-inner { gap: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .watermark-drift, .scroll-cue svg { animation: none; }
+    .reveal { transition: none; opacity: 1; transform: none; }
+    .hero-content { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="brandmark">ORT</div>
+
+  <section class="hero" id="hero">
+    <div class="layer" id="heroWatermarkOuter" aria-hidden="true">
+      <div class="watermark-rotate">
+        <div class="watermark-drift" id="heroWatermarkGrid"></div>
+      </div>
+    </div>
+    <div class="layer layer-grid" id="heroGrid" aria-hidden="true"></div>
+
+    <div class="hero-content" id="heroContent">
+      <div class="photo-frame">
+        <svg class="owner-icon" viewBox="0 0 24 24" fill="none" stroke-width="1.4" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <span class="photo-caption">Owner photo — replace this frame</span>
+      <span class="eyebrow on-dark">Frontend developer — ORT Studios</span>
+      <h1>Oatile Rakale</h1>
+    </div>
+
+    <a class="scroll-cue" href="#about">
+      Scroll
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2 5l6 6 6-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </section>
+
+  <section class="about" id="about">
+    <div class="about-inner reveal">
+      <span class="eyebrow">What I do</span>
+      <h2>Websites for the businesses everyone else skips past</h2>
+      <p>
+        I'm a frontend web developer running ORT Studios, a one-person practice
+        built for plumbers, bakers, mechanics, salon owners — the trades that
+        keep a town running but rarely get a call back from the bigger agencies.
+      </p>
+      <p>
+        Instead of leading with a proposal, I build a real, working website for
+        your business first, so you can see exactly what you're getting before
+        anything changes hands. From there we refine it together — layout,
+        copy, photos, booking — until it's ready to go live.
+      </p>
+      <div class="tags">
+        <span class="tag">Live demo first</span>
+        <span class="tag">Small business focus</span>
+        <span class="tag">Fast, clean builds</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="layer" style="position:absolute; inset:-20%; transform:rotate(10deg);" aria-hidden="true">
+      <div class="watermark-drift alt" id="ctaWatermarkGrid"></div>
+    </div>
+    <div class="cta-inner reveal">
+      <span class="eyebrow on-dark">Ready to see more?</span>
+      <h2>Explore the full portfolio</h2>
+      <p>Live demos, past client sites, and the full ORT Studios story.</p>
+      <!-- TODO: swap href="#" for your live full-portfolio URL -->
+      <a class="cta-button" href="#">
+        View full portfolio
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <script>
+    function fillWatermark(el, count) {
+      if (!el) return;
+      var frag = document.createDocumentFragment();
+      for (var i = 0; i < count; i++) {
+        var s = document.createElement('span');
+        s.textContent = 'ORT';
+        frag.appendChild(s);
+      }
+      el.appendChild(frag);
+    }
+    fillWatermark(document.getElementById('heroWatermarkGrid'), 54);
+    fillWatermark(document.getElementById('ctaWatermarkGrid'), 36);
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!reduceMotion) {
+      var hero = document.getElementById('hero');
+      var watermarkOuter = document.getElementById('heroWatermarkOuter');
+      var grid = document.getElementById('heroGrid');
+      var content = document.getElementById('heroContent');
+      var narrow = window.innerWidth < 700;
+      var speeds = narrow
+        ? { watermark: 0.08, grid: 0.18 }
+        : { watermark: 0.15, grid: 0.35 };
+
+      var ticking = false;
+      function onScroll() {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(function () {
+          var y = window.scrollY;
+          var heroHeight = hero.offsetHeight;
+          var fraction = Math.min(Math.max(y / heroHeight, 0), 1);
+
+          watermarkOuter.style.transform = 'translateZ(-600px) scale(1.6) translateY(' + (y * speeds.watermark) + 'px)';
+          grid.style.transform = 'translateZ(-300px) scale(1.3) translateY(' + (y * speeds.grid) + 'px)';
+          content.style.opacity = String(1 - fraction);
+          content.style.transform = 'scale(' + (1 - fraction * 0.08) + ')';
+
+          ticking = false;
+        });
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
+    var revealEls = document.querySelectorAll('.reveal');
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      revealEls.forEach(function (el) { io.observe(el); });
+    } else {
+      revealEls.forEach(function (el) { el.classList.add('is-visible'); });
+    }
+  </script>
+
+</body>
+</html>
